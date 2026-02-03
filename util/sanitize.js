@@ -14,20 +14,45 @@ async function sanitizeUser(user, visibilityMap = {}, currentUserId, plandetails
   } = user;
 
   // Apply visibility rules
-  Object.keys(rest).forEach((key) => {
-    if(visibilityMap[key]==="location"&&visibilityMap[key]===0){
-      delete rest.co;
-    }
-    if (visibilityMap[key] !== undefined && visibilityMap[key] === 0) {
-      // Field is hidden by visibility map
-      delete rest[key];
-    } else {
-      // Normalize strings
+  // Object.keys(rest).forEach((key) => {
+  //   if(visibilityMap[key]==="location"&&visibilityMap[key]===0){
+  //     delete rest.co;
+  //   }
+  //   if (visibilityMap[key] !== undefined && visibilityMap[key] === 0) {
+  //     // Field is hidden by visibility map
+  //     delete rest[key];
+  //   } else {
+  //     // Normalize strings
+  //     if (typeof rest[key] === "string") {
+  //       rest[key] = rest[key].trim().toLowerCase();
+  //     }
+  //   }
+  // });
+  const hasVisibilityRules = visibilityMap && Object.keys(visibilityMap).length > 0;
+
+  if (hasVisibilityRules) {
+    Object.keys(rest).forEach((key) => {
+      if (visibilityMap["location"] === 0) {
+        delete rest.u_country
+        delete rest.u_district
+        delete rest.u_state
+        delete rest.u_location
+      }
+      if (visibilityMap[key] === 0) {
+        delete rest[key];
+      } else if (typeof rest[key] === "string") {
+        rest[key] = rest[key].trim().toLowerCase();
+      }
+    });
+  } else {
+    // Just normalize strings
+    Object.keys(rest).forEach((key) => {
       if (typeof rest[key] === "string") {
         rest[key] = rest[key].trim().toLowerCase();
       }
-    }
-  });
+    });
+  }
+
 
   // -----------------------
   // Contact Info Access Logic
