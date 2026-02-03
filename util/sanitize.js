@@ -53,7 +53,6 @@ async function sanitizeUser(user, visibilityMap = {}, currentUserId, plandetails
     });
   }
 
-
   // -----------------------
   // Contact Info Access Logic
   // -----------------------
@@ -79,6 +78,9 @@ async function sanitizeUser(user, visibilityMap = {}, currentUserId, plandetails
     delete rest.u_last_name;
     delete rest.u_email;
     delete rest.u_mobile;
+    delete rest.u_country;
+    delete rest.u_state;
+    delete rest.u_district;
     delete rest.u_location;
     delete rest.u_company_name;
 
