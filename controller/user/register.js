@@ -747,30 +747,53 @@ module.exports.SearchUser = async (req, res) => {
     multiValueFilter("u_highest_qualification", filter.qualification);
     multiValueFilter("u_birth_star", filter.birth_star);
 
-    // -----------------------
-    // 🎂 Age Filter
-    // -----------------------
-    const age = toNumber(filter.age);
-    const ageFrom = toNumber(filter.ageFrom);
-    const ageTo = toNumber(filter.ageTo);
+    // // -----------------------
+    // // 🎂 Age Filter
+    // // -----------------------
+    // const age = toNumber(filter.age);
+    // const ageFrom = toNumber(filter.ageFrom);
+    // const ageTo = toNumber(filter.ageTo);
 
-    if (age !== null) {
+    // if (age !== null) {
+    //   conditions.push(
+    //     "TIMESTAMPDIFF(YEAR, u_dob, CURDATE()) = ?"
+    //   );
+    //   params.push(age);
+    // } else {
+    //   if (ageFrom !== null) {
+    //     conditions.push(
+    //       "TIMESTAMPDIFF(YEAR, u_dob, CURDATE()) >= ?"
+    //     );
+    //     params.push(ageFrom);
+    //   }
+    //   if (ageTo !== null) {
+    //     conditions.push(
+    //       "TIMESTAMPDIFF(YEAR, u_dob, CURDATE()) <= ?"
+    //     );
+    //     params.push(ageTo);
+    //   }
+    // }
+    // -----------------------
+    // 🎂 Age Filter (FIXED)
+    // -----------------------
+    if (filter.age && Number(filter.age) > 0) {
       conditions.push(
         "TIMESTAMPDIFF(YEAR, u_dob, CURDATE()) = ?"
       );
-      params.push(age);
+      params.push(Number(filter.age));
     } else {
-      if (ageFrom !== null) {
+      if (filter.ageFrom && Number(filter.ageFrom) > 0) {
         conditions.push(
           "TIMESTAMPDIFF(YEAR, u_dob, CURDATE()) >= ?"
         );
-        params.push(ageFrom);
+        params.push(Number(filter.ageFrom));
       }
-      if (ageTo !== null) {
+
+      if (filter.ageTo && Number(filter.ageTo) > 0) {
         conditions.push(
           "TIMESTAMPDIFF(YEAR, u_dob, CURDATE()) <= ?"
         );
-        params.push(ageTo);
+        params.push(Number(filter.ageTo));
       }
     }
 
@@ -778,7 +801,7 @@ module.exports.SearchUser = async (req, res) => {
     // No Search / No Filter
     // -----------------------
     if (!search.trim() && Object.keys(filter).length === 0) {
-      return res.send({ result: false, total: 0, data: [] });
+      return res.send({ result: false, message: "No data found.", total: 0, data: [] });
     }
 
     const condition =
