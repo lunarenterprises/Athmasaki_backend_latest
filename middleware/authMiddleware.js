@@ -15,6 +15,7 @@ const verifyToken = async (req, res, next) => {
         }
 
         const token = authHeader.split(" ")[1];
+        console.log(`${req.method} ${req.originalUrl} : ${token}`)
 
         // Verify JWT validity
         let decoded;

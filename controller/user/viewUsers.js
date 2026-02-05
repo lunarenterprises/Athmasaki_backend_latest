@@ -293,6 +293,7 @@ module.exports.ViewProfile = async (req, res) => {
                         })
                     }
                 }
+                console.log("token in view profile in if : ", token)
                 return res.send({
                     result: true,
                     message: "Your profile is under verification. Please wait for admin approval.",
@@ -338,6 +339,7 @@ module.exports.ViewProfile = async (req, res) => {
                         })
                     }
                 }
+                console.log("token in view profile in else : ", token)
                 return res.send({
                     result: true,
                     message: "Data retrieved successfully",
