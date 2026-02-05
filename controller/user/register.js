@@ -741,9 +741,11 @@ module.exports.SearchUser = async (req, res) => {
     likeFilter("u_diet", filter.diet);
     likeFilter("u_religion", filter.religion);
     likeFilter("u_community", filter.community);
+    likeFilter("u_work", filter.work);
 
     multiValueFilter("u_mother_tongue", filter.mother_tongue);
-    multiValueFilter("u_work", filter.career);
+    // multiValueFilter("u_work", filter.career);
+    multiValueFilter("u_interest", filter.interests);
     multiValueFilter("u_highest_qualification", filter.qualification);
     multiValueFilter("u_birth_star", filter.birth_star);
 
