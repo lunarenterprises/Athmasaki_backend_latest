@@ -110,7 +110,7 @@ ORDER BY c.updated_at DESC `,
     getChatUsers: (chat_id, sender_id) => {
         return new Promise((resolve, reject) => {
             db.query(
-                "SELECT * FROM chat WHERE id = ? AND (sender_id = ? OR receiver_id = ?)",
+                "SELECT * FROM chats WHERE id = ? AND (sender_id = ? OR receiver_id = ?)",
                 [chat_id, sender_id, sender_id],
                 (err, result) => {
                     if (err) return reject(err);
