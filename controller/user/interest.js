@@ -1,6 +1,8 @@
 const model = require('../../model/user/interest')
 const { sanitizeUserList } = require("../../util/sanitize");
 const { SendNotification } = require("../../util/sendnotification");
+const interestNotificationModel = require('../../model/user/interestNotification');
+const { getOnlineUsers, getIO } = require('../../socket/socket');
 
 module.exports.SendInterest = async (req, res) => {
     try {
@@ -65,6 +67,34 @@ module.exports.SendInterest = async (req, res) => {
                         message: `You’ve received new interest ❤️`,
                         type: "interestRequest",
                     });
+
+                    // Emit real-time interest notification to receiver if online
+                    try {
+                        const notification = await interestNotificationModel.createInterestNotification(
+                            user_id, receiver_id, 'interest_sent'
+                        );
+                        const senderDetails = await interestNotificationModel.getUserDetailsForNotification(user_id);
+                        const onlineUsers = getOnlineUsers();
+                        const io = getIO();
+
+                        const receiverSocketId = onlineUsers.get(receiver_id);
+                        if (receiverSocketId && io) {
+                            io.sockets.sockets.get(receiverSocketId)?.emit("interestNotification", {
+                                notification_id: notification.insertId,
+                                from_user_id: user_id,
+                                from_user_firstname: senderDetails?.u_first_name || '',
+                                from_user_lastname: senderDetails?.u_last_name || '',
+                                from_user_image: senderDetails?.profile_image || '',
+                                to_user_id: receiver_id,
+                                type: 'interest_sent',
+                                is_notification_read: true,
+                                created_at: new Date().toISOString()
+                            });
+                        }
+                    } catch (err) {
+                        console.error("Interest notification emit error:", err);
+                        // Don't fail the request if notification fails
+                    }
 
                     return res.send({
                         result: true,
@@ -534,6 +564,34 @@ module.exports.UpdateInterestStatus = async (req, res) => {
                     message: `${name} has accepted your interest `,
                     type: "acceptinterestStatus",
                 });
+
+                // Emit real-time interest accepted notification to original sender if online
+                try {
+                    const notification = await interestNotificationModel.createInterestNotification(
+                        user_id, interestData[0]?.i_sender_id, 'interest_accepted'
+                    );
+                    const accepterDetails = await interestNotificationModel.getUserDetailsForNotification(user_id);
+                    const onlineUsers = getOnlineUsers();
+                    const io = getIO();
+
+                    const originalSenderSocketId = onlineUsers.get(interestData[0]?.i_sender_id);
+                    if (originalSenderSocketId && io) {
+                        io.sockets.sockets.get(originalSenderSocketId)?.emit("interestNotification", {
+                            notification_id: notification.insertId,
+                            from_user_id: user_id,
+                            from_user_firstname: accepterDetails?.u_first_name || '',
+                            from_user_lastname: accepterDetails?.u_last_name || '',
+                            from_user_image: accepterDetails?.profile_image || '',
+                            to_user_id: interestData[0]?.i_sender_id,
+                            type: 'interest_accepted',
+                            is_notification_read: true,
+                            created_at: new Date().toISOString()
+                        });
+                    }
+                } catch (err) {
+                    console.error("Interest accepted notification emit error:", err);
+                    // Don't fail the request if notification fails
+                }
             }
             if (status == 'rejected') {
                 await SendNotification({

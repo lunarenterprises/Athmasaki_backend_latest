@@ -1,7 +1,16 @@
 const model = require('../model/user/chat'); // single combined model
+const interestNotificationModel = require('../model/user/interestNotification');
 
-module.exports = function (io) {
-    const onlineUsers = new Map();
+// Shared state for external access
+let ioInstance = null;
+const onlineUsers = new Map();
+
+// Export getters for external access (used by interest controller)
+module.exports.getOnlineUsers = () => onlineUsers;
+module.exports.getIO = () => ioInstance;
+
+module.exports.initSocket = function (io) {
+    ioInstance = io;
 
     function broadcastOnlineList() {
         const allOnline = Array.from(onlineUsers.keys());
@@ -194,6 +203,30 @@ socket.on("sentMessage", async ({ chat_id, sender_id, message }) => {
                 reader_id: user_id
             });
         });
+
+        // Mark interest notification as read (independent from chat notifications)
+        socket.on("markInterestNotificationRead", async ({ notification_id, user_id }) => {
+            try {
+                if (!notification_id || !user_id) {
+                    return socket.emit("error", "notification_id and user_id are required");
+                }
+
+                const result = await interestNotificationModel.markInterestNotificationAsRead(notification_id, user_id);
+
+                if (result.affectedRows > 0) {
+                    // Emit badge update back to user
+                    const unreadCount = await interestNotificationModel.getUnreadInterestCount(user_id);
+                    socket.emit("interestNotificationReadUpdate", {
+                        notification_id,
+                        unread_count: unreadCount
+                    });
+                }
+            } catch (err) {
+                console.error("markInterestNotificationRead error:", err);
+                socket.emit("error", "Could not mark notification as read");
+            }
+        });
+
 
         // Disconnect
         socket.on("disconnect", () => {

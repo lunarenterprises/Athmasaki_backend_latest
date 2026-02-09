@@ -48,7 +48,7 @@ const io = require("socket.io")(server, {
 });
 
 require('./cron/cronfunctions');
-require('./socket/socket')(io);
+require('./socket/socket').initSocket(io);
 
 server.listen(process.env.PORT || 7004, () => {
     console.log(`Server running on port ${process.env.PORT || 7004}`);
