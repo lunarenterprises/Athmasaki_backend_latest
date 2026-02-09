@@ -221,12 +221,30 @@ socket.on("sentMessage", async ({ chat_id, sender_id, message }) => {
                         unread_count: unreadCount
                     });
                 }
+                
             } catch (err) {
                 console.error("markInterestNotificationRead error:", err);
                 socket.emit("error", "Could not mark notification as read");
             }
         });
 
+        // Get unread interest notification count
+        socket.on("getInterestNotificationCount", async ({ user_id }) => {
+            try {
+                if (!user_id) {
+                    return socket.emit("error", "user_id is required");
+                }
+
+                const unreadCount = await interestNotificationModel.getUnreadInterestCount(user_id);
+                socket.emit("interestNotificationCount", {
+                    user_id,
+                    unread_count: unreadCount
+                });
+            } catch (err) {
+                console.error("getInterestNotificationCount error:", err);
+                socket.emit("error", "Could not get notification count");
+            }
+        });
 
         // Disconnect
         socket.on("disconnect", () => {

@@ -17,6 +17,7 @@ module.exports.createInterestNotification = async (from_user_id, to_user_id, typ
  * Mark an interest notification as read
  * Sets is_notification_read to FALSE when user clicks/views the notification
  */
+
 module.exports.markInterestNotificationAsRead = async (notification_id, user_id) => {
     const Query = `UPDATE interest_notifications 
                    SET in_is_notification_read = FALSE 
