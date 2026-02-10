@@ -511,7 +511,7 @@ module.exports.DeleteSendedInterests = async (req, res) => {
 
 module.exports.UpdateInterestStatus = async (req, res) => {
     try {
-        const { user_id, profile_id, name } = req.user
+        const { user_id, profile_id } = req.user
         const { status, interest_id } = req.body
         if (!status || !["accepted", "rejected"].includes(status) || !interest_id) {
             return res.send({
@@ -519,7 +519,8 @@ module.exports.UpdateInterestStatus = async (req, res) => {
                 message: "Status and interests id are required and status should be one of ['accepted', 'rejected']"
             })
         }
-
+        const userData = await model.CheckReceiver(user_id)
+        const name = userData[0]?.u_first_name + " " + userData[0]?.u_last_name
         const interestData = await model.CheckInterestWithId(interest_id, user_id)
         if (interestData.length === 0) {
             return res.send({
