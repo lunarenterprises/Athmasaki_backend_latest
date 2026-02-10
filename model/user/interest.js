@@ -4,8 +4,16 @@ const query = util.promisify(db.query).bind(db);
 
 
 module.exports.CheckInterestSended = async (sender_id, reciever_id) => {
-    let Query = `select * from interests where i_sender_id=? and i_receiver_id=?`
-    return await query(Query, [sender_id, reciever_id])
+    let Query = `SELECT *
+                 FROM interests
+                 WHERE 
+                 (i_sender_id = ? AND i_receiver_id = ?)
+                 OR
+                 (i_sender_id = ? AND i_receiver_id = ?);`
+    return await query(Query, [sender_id,
+        reciever_id,
+        reciever_id,
+        sender_id])
 }
 
 module.exports.CheckInterestLimit = async (user_id) => {
