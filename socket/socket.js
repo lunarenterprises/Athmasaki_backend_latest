@@ -229,7 +229,7 @@ socket.on("sentMessage", async ({ chat_id, sender_id, message }) => {
         });
 
         // Get unread interest notification count
-        socket.on("getInterestNotificationCount", async ({ user_id }) => {
+        socket.on("showInterestBadge", async ({ user_id }) => {
             try {
                 if (!user_id) {
                     return socket.emit("error", "user_id is required");
