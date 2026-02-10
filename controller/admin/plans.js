@@ -146,8 +146,11 @@ module.exports.ListAllPlans = async (req, res) => {
 
             } else if (plan_type === 'payperuse') {
                 // Show only payperuse plans
+                // AllPlandetails = AllPlandetails.filter(
+                //     plan => plan.p_plan_type.toLowerCase() === 'payperuse'
+                // );
                 AllPlandetails = AllPlandetails.filter(
-                    plan => plan.p_plan_type.toLowerCase() === 'payperuse'
+                    plan => plan.p_plan_type.toLowerCase() !== 'free'
                 );
             }
         }
