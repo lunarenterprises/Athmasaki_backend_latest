@@ -660,7 +660,7 @@ module.exports.SearchUser = async (req, res) => {
     const preferredGender =
       preferenceData?.[0]?.pp_gender || null;
 
-    if (preferredGender) {
+    if (preferredGender && preferredGender.toLowerCase() !== "all") {
       conditions.push("LOWER(u_gender) = ?");
       params.push(preferredGender.toLowerCase());
     }

@@ -46,11 +46,16 @@ module.exports.FindMatchingUsers = async (req, res) => {
         : [];
     const inList = (val, list) => list.includes(normalize(val));
 
+    const prefGender = normalize(pref.pp_gender);
+
     // -----------------------
     // 4. Score Users
     // -----------------------
     const scoredUsers = users
-      .filter(u => normalize(u.u_gender) === normalize(pref.pp_gender))
+      .filter(u => {
+        if (prefGender === 'all') return true; // no gender filter
+        return normalize(u.u_gender) === prefGender;
+      })
       .map(user => {
         let score = 0;
         const age = getAge(user.u_dob);
