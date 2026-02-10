@@ -82,12 +82,9 @@ module.exports.SendInterest = async (req, res) => {
                             io.sockets.sockets.get(receiverSocketId)?.emit("interestNotification", {
                                 notification_id: notification.insertId,
                                 from_user_id: user_id,
-                                from_user_firstname: senderDetails?.u_first_name || '',
-                                from_user_lastname: senderDetails?.u_last_name || '',
-                                from_user_image: senderDetails?.profile_image || '',
                                 to_user_id: receiver_id,
                                 type: 'interest_sent',
-                                is_notification_read: true,
+                                show_badge: true,
                                 created_at: new Date().toISOString()
                             });
                         }

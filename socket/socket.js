@@ -205,20 +205,20 @@ socket.on("sentMessage", async ({ chat_id, sender_id, message }) => {
         });
 
         // Mark interest notification as read (independent from chat notifications)
-        socket.on("markInterestNotificationRead", async ({ notification_id, user_id }) => {
+        socket.on("removeInterestBadge", async ({ user_id }) => {
             try {
-                if (!notification_id || !user_id) {
-                    return socket.emit("error", "notification_id and user_id are required");
+                if ( !user_id) {
+                    return socket.emit("error", "User_id is required");
                 }
 
-                const result = await interestNotificationModel.markInterestNotificationAsRead(notification_id, user_id);
+                const result = await interestNotificationModel.markInterestNotificationAsRead(user_id);
 
                 if (result.affectedRows > 0) {
                     // Emit badge update back to user
-                    const unreadCount = await interestNotificationModel.getUnreadInterestCount(user_id);
-                    socket.emit("interestNotificationReadUpdate", {
-                        notification_id,
-                        unread_count: unreadCount
+                    const unreadCount = await interestNotificationModel.getUnreadInterestBadge(user_id);
+                    socket.emit("showInterestBadge", {
+                        user_id,
+                         show_badge: unreadCount
                     });
                 }
                 
@@ -235,10 +235,10 @@ socket.on("sentMessage", async ({ chat_id, sender_id, message }) => {
                     return socket.emit("error", "user_id is required");
                 }
 
-                const unreadCount = await interestNotificationModel.getUnreadInterestCount(user_id);
-                socket.emit("interestNotificationCount", {
+                const unreadCount = await interestNotificationModel.getUnreadInterestBadge(user_id);
+                socket.emit("showInterestBadge", {
                     user_id,
-                    unread_count: unreadCount
+                    show_badge: unreadCount
                 });
             } catch (err) {
                 console.error("getInterestNotificationCount error:", err);

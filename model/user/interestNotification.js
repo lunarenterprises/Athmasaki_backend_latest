@@ -18,24 +18,30 @@ module.exports.createInterestNotification = async (from_user_id, to_user_id, typ
  * Sets is_notification_read to FALSE when user clicks/views the notification
  */
 
-module.exports.markInterestNotificationAsRead = async (notification_id, user_id) => {
+module.exports.markInterestNotificationAsRead = async (user_id) => {
     const Query = `UPDATE interest_notifications 
-                   SET in_is_notification_read = FALSE 
-                   WHERE in_id = ? AND in_to_user_id = ?`;
-    return await query(Query, [notification_id, user_id]);
+                   SET in_show_badge = ? 
+                   WHERE in_to_user_id = ?`;
+    return await query(Query, [1, user_id]);
 };
 
 /**
  * Get count of unread interest notifications for a user
  * Unread means is_notification_read = TRUE (not yet viewed)
  */
-module.exports.getUnreadInterestCount = async (user_id) => {
-    const Query = `SELECT COUNT(*) as count 
-                   FROM interest_notifications 
-                   WHERE in_to_user_id = ? AND in_is_notification_read = TRUE`;
+module.exports.getUnreadInterestBadge = async (user_id) => {
+    const Query = `
+        SELECT EXISTS (
+            SELECT 1
+            FROM interest_notifications
+            WHERE in_to_user_id = ?
+              AND in_show_badge = 0
+        ) AS show_badge
+    `;
     const result = await query(Query, [user_id]);
-    return result[0]?.count || 0;
+    return Boolean(result[0]?.show_badge);
 };
+
 
 /**
  * Get user details for notification payload (firstname, lastname, profile image)
