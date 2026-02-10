@@ -8,9 +8,9 @@ const query = util.promisify(db.query).bind(db);
  */
 module.exports.createInterestNotification = async (from_user_id, to_user_id, type) => {
     const Query = `INSERT INTO interest_notifications 
-                   (in_from_user_id, in_to_user_id, in_type, in_is_notification_read, in_created_at) 
-                   VALUES (?, ?, ?, TRUE, NOW())`;
-    return await query(Query, [from_user_id, to_user_id, type]);
+                   (in_from_user_id, in_to_user_id, in_type, in_show_badge, in_created_at) 
+                   VALUES (?, ?, ?, ?, NOW())`;
+    return await query(Query, [from_user_id, to_user_id, type,0]);
 };
 
 /**

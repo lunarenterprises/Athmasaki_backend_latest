@@ -249,6 +249,7 @@ socket.on("sentMessage", async ({ chat_id, sender_id, message }) => {
         // Disconnect
         socket.on("disconnect", () => {
             for (const [userId, sockId] of onlineUsers.entries()) {
+                console.log(`socket -${sockId} disconnected, user_id -${userId}`)
                 if (sockId === socket.id) {
                     onlineUsers.delete(userId);
                     break;

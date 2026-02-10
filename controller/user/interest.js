@@ -73,6 +73,7 @@ module.exports.SendInterest = async (req, res) => {
                         const notification = await interestNotificationModel.createInterestNotification(
                             user_id, receiver_id, 'interest_sent'
                         );
+                        console.log("notification : ", notification)
                         const senderDetails = await interestNotificationModel.getUserDetailsForNotification(user_id);
                         const onlineUsers = getOnlineUsers();
                         const io = getIO();
