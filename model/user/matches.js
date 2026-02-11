@@ -12,9 +12,23 @@ module.exports.GetMatchedUserIds = async (user_id) => {
     return await query("SELECT m_matched_user_id FROM matches WHERE m_user_id = ?", [user_id]);
 }
 
+// module.exports.GetInterestSentUserIds = async (user_id) => {
+//     return await query("SELECT i_receiver_id FROM interests WHERE i_sender_id = ?", [user_id]);
+// }
 module.exports.GetInterestSentUserIds = async (user_id) => {
-    return await query("SELECT i_receiver_id FROM interests WHERE i_sender_id = ?", [user_id]);
-}
+    const Query = `
+        SELECT 
+            CASE 
+                WHEN i_sender_id = ? THEN i_receiver_id
+                WHEN i_receiver_id = ? THEN i_sender_id
+            END AS connected_user_id
+        FROM interests
+        WHERE i_sender_id = ? OR i_receiver_id = ?
+    `;
+
+    return await query(Query, [user_id, user_id, user_id, user_id]);
+};
+
 
 module.exports.GetAcceptedInterestUserIds = async (user_id) => {
     return await query(

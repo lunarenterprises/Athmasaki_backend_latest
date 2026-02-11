@@ -99,13 +99,15 @@ module.exports.FindMatchingUsers = async (req, res) => {
     // 6a. EXCLUDE USERS ALREADY SENT INTEREST
     // -----------------------
     const sentInterests = await model.GetInterestSentUserIds(user_id);
-    const sentInterestIds = sentInterests
-      .map(i => i.i_receiver_id)
-      .filter(Boolean);
+
+    const sentInterestIds = new Set(
+      sentInterests.map(i => i.connected_user_id)
+    );
 
     allMatches = allMatches.filter(
-      user => !sentInterestIds.includes(user.u_id)
+      user => !sentInterestIds.has(user.u_id)
     );
+
 
     // -----------------------
     // ✅ 6b. EXCLUDE ACCEPTED INTEREST USERS (FROM INTEREST TABLE)
