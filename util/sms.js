@@ -1,6 +1,6 @@
 const axios = require('axios')
 
-module.exports.sendSMS = async (mobile,token) => {
+module.exports.sendSMS = async (mobile, token) => {
   try {
     const url = "https://control.msg91.com/api/v5/flow/";
     const response = await axios.post(
@@ -9,7 +9,7 @@ module.exports.sendSMS = async (mobile,token) => {
         flow_id: process.env.SMS_TEMPLATE_ID, // DLT template ID (required for Indian routes)
         sender: process.env.SMS_SENDER_ID,
         mobiles: mobile,
-        var1:token, 
+        var1: token,
       },
       {
         headers: {
@@ -21,14 +21,14 @@ module.exports.sendSMS = async (mobile,token) => {
 
     console.log("SMS Sent:", response);
     return response.data;
-    
+
   } catch (error) {
     console.error("Error sending SMS:", error.response?.data || error.message);
     throw error;
   }
 };
 
-module.exports.sendPasswordResetSMS = async (mobile,token) => {
+module.exports.sendPasswordResetSMS = async (mobile, token) => {
   try {
     const url = "https://control.msg91.com/api/v5/flow/";
     const response = await axios.post(
@@ -37,7 +37,7 @@ module.exports.sendPasswordResetSMS = async (mobile,token) => {
         flow_id: process.env.SMS_RESET_TEMPLATE_ID, // DLT template ID (required for Indian routes)
         sender: process.env.SMS_SENDER_ID,
         mobiles: mobile,
-        var1:token, 
+        var1: token,
       },
       {
         headers: {
@@ -49,7 +49,7 @@ module.exports.sendPasswordResetSMS = async (mobile,token) => {
 
     console.log("SMS Sent:", response);
     return response.data;
-    
+
   } catch (error) {
     console.error("Error sending SMS:", error.response?.data || error.message);
     throw error;
@@ -108,3 +108,25 @@ module.exports.formatPhoneNumber = (phone, defaultCountryCode = '+91') => {
 //     throw error;
 //   }
 // };
+
+module.exports.normalizeIndianNumber = function (number) {
+  // Remove spaces, dashes, etc.
+  number = number.replace(/\s+/g, '').replace(/-/g, '');
+
+  // Remove + if exists
+  if (number.startsWith('+')) {
+    number = number.substring(1);
+  }
+
+  // If starts with 91 and length is correct, keep it
+  if (number.startsWith('91') && number.length === 12) {
+    return number;
+  }
+
+  // If only 10-digit number, add 91
+  if (number.length === 10) {
+    return '91' + number;
+  }
+
+  return number; // fallback
+}

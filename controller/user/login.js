@@ -4,7 +4,7 @@ const { addCountryCode } = require('../../util/formatMobile')
 const { GenerateOtp, TimeAfter, isOtpExpired } = require('../../util/generateOTP')
 const { transporter } = require('../../util/mailer')
 const { GenerateToken } = require('../../util/jwt')
-const { sendSMS } = require('../../util/sms')
+const { sendSMS, normalizeIndianNumber } = require('../../util/sms')
 let moment = require('moment')
 
 module.exports.LoginWithOtp = async (req, res) => {
@@ -63,6 +63,9 @@ module.exports.LoginWithOtp = async (req, res) => {
       } else {
         await model.LoginData(user.u_id, datetime);
       }
+
+      const normalisedPhone = normalizeIndianNumber(mobile)
+      await sendSMS(normalisedPhone, token)
 
       return res.send({
         result: true,
@@ -129,8 +132,8 @@ module.exports.LoginVerifyOtp = async (req, res) => {
     }
 
     // ❌ WRONG OTP
-    // if (user.u_token != token)
-    if ("1111" != token) {
+    // if ("1111" != token) {
+    if (user.u_token != token){
       await model.IncreaseOtpAttempts(user.u_id);
       let attempts = await model.GetOtpAttempts(user.u_id);
 

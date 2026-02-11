@@ -2,7 +2,7 @@ const model = require('../../model/user/register')
 const { addCountryCode } = require('../../util/formatMobile')
 const { GenerateOtp, TimeAfter, isOtpExpired } = require('../../util/generateOTP')
 const { generateProfileId } = require('../../util/userIdcreation')
-const { sendSMS } = require('../../util/sms')
+const { sendSMS, normalizeIndianNumber } = require('../../util/sms')
 const { getSubscriptionDates } = require('../../util/subscriptionExpiry')
 const { GenerateToken } = require('../../util/jwt')
 const formidable = require("formidable");
@@ -74,6 +74,8 @@ module.exports.RegisterPhoneNumber = async (req, res) => {
           message: "Failed to update OTP.Please try again."
         })
       }
+      const normalisedPhone = normalizeIndianNumber(mobile)
+      await sendSMS(normalisedPhone, token)
 
       return res.send({
         result: true,
@@ -180,8 +182,8 @@ module.exports.VerifyOtp = async (req, res) => {
     }
 
     // ❌ WRONG OTP
-    // if (checkEmail[0]?.u_token != token)
-    if ('1111' != token) {
+    // if ('1111' != token) {
+    if (checkEmail[0]?.u_token != token) {
 
       await model.IncreaseOtpAttempts(checkEmail[0].u_id)
       let attempts = await model.GetOtpAttempts(checkEmail[0].u_id)
