@@ -2,10 +2,23 @@ var db = require('../../config/db');
 var util = require("util");
 const query = util.promisify(db.query).bind(db);
 
-module.exports.ListAllUsers = async (condition) => {
-    const Query = `select * from users where u_role='user' ${condition} order by u_id desc `
-    return await query(Query)
-}
+// module.exports.ListAllUsers = async (condition) => {
+//     const Query = `select * from users where u_role='user' ${condition} order by u_id desc `
+//     return await query(Query)
+// }
+module.exports.ListAllUsers = async (condition = "", params = []) => {
+
+    const Query = `
+        SELECT * 
+        FROM users 
+        WHERE u_role='user' 
+        ${condition} 
+        ORDER BY u_id DESC
+    `;
+
+    return await query(Query, params);  // ✅ pass params
+};
+
 
 module.exports.CheckUser = async (user_id) => {
     let Query = `select * from users where u_id=?`
