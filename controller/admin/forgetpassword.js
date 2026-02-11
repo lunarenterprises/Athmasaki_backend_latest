@@ -30,18 +30,18 @@ module.exports.forgotpassword = async (req, res) => {
                 if (sendotp == false) {
                     return res.send({
                         result: false,
-                        message: "Failed to send otp to your phone. Please try again."
+                        message: "Failed to send OTP to your phone. Please try again."
                     })
                 }
                 // await model.updateOtpStatus(mobile, "unverified")
                 return res.send({
                     result: true,
-                    message: "Password reset otp sent to mobile "
+                    message: "Password reset OTP sent to mobile "
                 })
             } else {
                 return res.send({
                     result: false,
-                    message: "failed to send Password reset otp "
+                    message: "failed to send Password reset OTP "
                 })
             }
         } else {
@@ -65,7 +65,7 @@ module.exports.VerifyOtp = async (req, res) => {
         if (!mobile || !otp) {
             return res.send({
                 result: false,
-                message: "mobile number and otp are required"
+                message: "mobile number and OTP are required"
             })
         }
 
@@ -90,7 +90,7 @@ module.exports.VerifyOtp = async (req, res) => {
 
             return res.send({
                 result: false,
-                message: "Invalid otp. Please enter correct one."
+                message: "Invalid OTP. Please enter correct one."
             })
         }
 

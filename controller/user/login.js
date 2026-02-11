@@ -92,7 +92,7 @@ module.exports.LoginVerifyOtp = async (req, res) => {
     if (!mobile || !token) {
       return res.send({
         result: false,
-        message: "mobile number and otp are required"
+        message: "mobile number and OTP are required"
       });
     }
 

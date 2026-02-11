@@ -89,7 +89,7 @@ module.exports.ChangeMobileVerifyOtp = async (req, res) => {
     if (!mobile || !token) {
       return res.send({
         result: false,
-        message: "mobile number and otp are required"
+        message: "mobile number and OTP are required"
       });
     }
 
@@ -129,7 +129,7 @@ module.exports.ChangeMobileVerifyOtp = async (req, res) => {
 
       return res.send({
         result: false,
-        message: "Invalid otp. Please enter correct one."
+        message: "Invalid OTP. Please enter correct one."
       });
     }
 

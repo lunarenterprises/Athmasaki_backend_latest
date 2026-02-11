@@ -71,13 +71,13 @@ module.exports.RegisterPhoneNumber = async (req, res) => {
       if (updateUsertoken.affectedRows == 0) {
         return res.send({
           result: false,
-          message: "Failed to update otp.Please try again."
+          message: "Failed to update OTP.Please try again."
         })
       }
 
       return res.send({
         result: true,
-        message: "Otp send successfully, Please verify otp to continue"
+        message: "OTP send successfully, Please verify OTP to continue"
       })
     }
 
@@ -117,7 +117,7 @@ module.exports.RegisterPhoneNumber = async (req, res) => {
 
           return res.send({
             result: true,
-            message: "Otp send successfully, Please verify otp to continue"
+            message: "OTP send successfully, Please verify OTP to continue"
           })
         }
       }
@@ -125,7 +125,7 @@ module.exports.RegisterPhoneNumber = async (req, res) => {
 
     return res.send({
       result: false,
-      message: "Failed to send otp, Please try again later"
+      message: "Failed to send OTP, Please try again later"
     })
 
   } catch (error) {
@@ -144,7 +144,7 @@ module.exports.VerifyOtp = async (req, res) => {
     if (!mobile || !token) {
       return res.send({
         result: false,
-        message: "mobile number and otp are required"
+        message: "mobile number and OTP are required"
       })
     }
 
