@@ -8,10 +8,26 @@ module.exports.ListAllUsers = async (user_id, condition, params = []) => {
                    WHERE u_role='user' 
                    AND u_status='active' 
                    AND u_id != ? 
+                   AND u_id NOT IN (
+            SELECT 
+                CASE 
+                    WHEN i_sender_id = ? THEN i_receiver_id
+                    WHEN i_receiver_id = ? THEN i_sender_id
+                END
+            FROM interests
+            WHERE i_sender_id = ? OR i_receiver_id = ?
+        )
                    ${condition} `;
     console.log("Query", Query);
 
-    return await query(Query, [user_id, ...params]);
+    return await query(Query, [
+        user_id,
+        user_id,        // CASE sender
+        user_id,        // CASE receiver
+        user_id,        // WHERE sender
+        user_id,
+        ...params
+    ]);
 };
 
 module.exports.GetprofileImage = async (u_id) => {
