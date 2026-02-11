@@ -18,11 +18,11 @@ module.exports.PaymentOrderId = async (req, res) => {
         let amount = pricedetails[0].p_price;
         const razorpay = new Razorpay({
             //live rzp key
-            // key_id: process.env.RZP_LIVE_KEY_ID,
-            // key_secret: process.env.LIVE_RZP_KEY_SECRET,
+            key_id: process.env.RZP_LIVE_KEY_ID,
+            key_secret: process.env.LIVE_RZP_KEY_SECRET,
             // test rzp key
-            key_id: process.env.RZP_TEST_KEY_ID,
-            key_secret: process.env.TEST_RZP_KEY_SECRET,
+            // key_id: process.env.RZP_TEST_KEY_ID,
+            // key_secret: process.env.TEST_RZP_KEY_SECRET,
         });
         const options = {
             amount: Number(amount) * 100, // amount in paisa (100 INR = 10000)
@@ -38,8 +38,8 @@ module.exports.PaymentOrderId = async (req, res) => {
                 result: true,
                 message: "Order id created sucessfully",
                 order_id: order,
-                // rzp_key_id: process.env.RZP_LIVE_KEY_ID,
-                rzp_key_id: process.env.RZP_TEST_KEY_ID,
+                rzp_key_id: process.env.RZP_LIVE_KEY_ID,
+                // rzp_key_id: process.env.RZP_TEST_KEY_ID,
 
             })
         } else {
@@ -105,10 +105,10 @@ module.exports.processPayment = async (req, res) => {
         // ------------------ VERIFY PAYMENT ------------------
         //test rzp key
 
-        const hmac = crypto.createHmac("sha256", process.env.RZP_TEST_KEY_ID);
+        // const hmac = crypto.createHmac("sha256", process.env.RZP_TEST_KEY_ID);
 
         //live rzp key
-        // const hmac = crypto.createHmac("sha256", process.env.RZP_LIVE_KEY_ID);
+        const hmac = crypto.createHmac("sha256", process.env.RZP_LIVE_KEY_ID);
 
         hmac.update(razorpay_order_id + "|" + razorpay_payment_id);
         const generated_signature = hmac.digest("hex");
