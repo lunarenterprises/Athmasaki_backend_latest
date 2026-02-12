@@ -1,6 +1,6 @@
 const model = require('../../model/user/changeMobile')
 const { GenerateOtp, TimeAfter, isOtpExpired } = require('../../util/generateOTP')
-const { sendSMS } = require('../../util/sms')
+const { sendSMS, normalizeIndianNumber } = require('../../util/sms')
 const moment = require("moment");
 
 module.exports.ChangePhoneNumber = async (req, res) => {
@@ -57,15 +57,8 @@ module.exports.ChangePhoneNumber = async (req, res) => {
         message: "Failed to generate OTP. Please try again."
       });
     }
-
-    // Send SMS
-    // let sendotp = await sendSMS(mobile, token);
-    // if (!sendotp) {
-    //   return res.send({
-    //     result: false,
-    //     message: "Failed to send OTP. Please try again."
-    //   });
-    // }
+    const normalisedPhone = normalizeIndianNumber(mobile)
+    await sendSMS(normalisedPhone, token)
 
     return res.send({
       result: true,
@@ -112,8 +105,8 @@ module.exports.ChangeMobileVerifyOtp = async (req, res) => {
     }
 
     // ❌ WRONG OTP
-    // if (userData[0].u_token != token) {
-    if ('1111' != token) {
+    // if ('1111' != token) {
+    if (userData[0].u_token != token) {
       await model.IncreaseOtpAttempts(user_id);
       let attempts = await model.GetOtpAttempts(user_id);
 
