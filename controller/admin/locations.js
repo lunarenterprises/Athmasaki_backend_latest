@@ -133,7 +133,8 @@ module.exports.ListCountry = async (req, res) => {
         if (Countrys.length == 0) {
             return res.send({
                 result: false,
-                message: "failed to fetch Country list"
+                message: "failed to fetch Country list",
+                data:[]
             });
         }
 
@@ -167,7 +168,8 @@ module.exports.ListStates = async (req, res) => {
         if (states.length == 0) {
             return res.send({
                 result: false,
-                message: "failed to fetch states list"
+                message: "failed to fetch states list",
+                data:[]
             });
         }
 
@@ -201,7 +203,8 @@ module.exports.ListDistricts = async (req, res) => {
             if (Districts.length == 0) {
                 return res.send({
                     result: false,
-                    message: "failed to fetch all district list"
+                    message: "failed to fetch all district list",
+                    data:[]
                 });
             }
 
