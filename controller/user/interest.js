@@ -450,26 +450,37 @@ module.exports.ListBlockedUser = async (req, res) => {
             blockedData = await model.AdminListBlocked()
         }
 
-        if (blockedData.length > 0) {
-            let ListblockedData = await Promise.all(
-                blockedData.map(async (el) => {
-                    el.profileimages = await model.GetprofileImage(el.u_id);
-                    return el;
-                })
-            );
-
-            return res.send({
-                result: true,
-                message: "Data retrieved successfully",
-                data: ListblockedData
+        let ListblockedData = await Promise.all(
+            blockedData.map(async (el) => {
+                el.profileimages = await model.GetprofileImage(el.u_id);
+                return el;
             })
-        } else {
-            return res.send({
-                result: true,
-                message: "No blocked user found",
-            })
-        }
+        );
 
+        return res.send({
+            result: true,
+            message: "Data retrieved successfully",
+            data: ListblockedData
+        })
+        // if (blockedData.length > 0) {
+        //     let ListblockedData = await Promise.all(
+        //         blockedData.map(async (el) => {
+        //             el.profileimages = await model.GetprofileImage(el.u_id);
+        //             return el;
+        //         })
+        //     );
+
+        //     return res.send({
+        //         result: true,
+        //         message: "Data retrieved successfully",
+        //         data: ListblockedData
+        //     })
+        // } else {
+        //     return res.send({
+        //         result: true,
+        //         message: "No blocked user found",
+        //     })
+        // }
     } catch (error) {
         return res.send({
             result: false,
