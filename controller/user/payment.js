@@ -250,12 +250,12 @@ module.exports.processPayment = async (req, res) => {
 module.exports.PaymentHistory = async (req, res) => {
     try {
         const payments = await PaymentModel.getAllPayments();
-        if (payments.length === 0) {
-            return res.send({
-                result: false,
-                message: "No payment history found"
-            })
-        }
+        // if (payments.length === 0) {
+        //     return res.send({
+        //         result: false,
+        //         message: "No payment history found"
+        //     })
+        // }
 
         const AllPaymentsDetails = await Promise.all(
             payments.map(async (payment) => {
