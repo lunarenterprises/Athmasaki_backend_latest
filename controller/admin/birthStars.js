@@ -49,7 +49,8 @@ module.exports.ListBirthStars = async (req, res) => {
         if (BirthStars.length == 0) {
             return res.send({
                 result: false,
-                message: "failed to fetch Birth Stars list"
+                message: "failed to fetch Birth Stars list",
+                data: []
             });
         }
 
