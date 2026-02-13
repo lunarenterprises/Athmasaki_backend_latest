@@ -46,12 +46,12 @@ module.exports.ListFaq = async (req, res) => {
     try {
         const Faqs = await model.ListFaq();
 
-        if (Faqs.length == 0) {
-            return res.send({
-                result: false,
-                message: "failed to fetch faq list"
-            });
-        }
+        // if (Faqs.length == 0) {
+        //     return res.send({
+        //         result: false,
+        //         message: "failed to fetch faq list"
+        //     });
+        // }
 
         return res.send({
             result: true,
