@@ -74,7 +74,8 @@ module.exports.RegisterPhoneNumber = async (req, res) => {
           message: "Failed to update OTP.Please try again."
         })
       }
-
+      const normalisedPhone = normalizeIndianNumber(mobile)
+      await sendSMS(normalisedPhone, token)
       return res.send({
         result: true,
         message: "OTP send successfully, Please verify OTP to continue"
