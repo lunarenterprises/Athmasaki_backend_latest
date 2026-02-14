@@ -9,7 +9,8 @@ module.exports.sendSMS = async (mobile, token) => {
         flow_id: process.env.SMS_TEMPLATE_ID, // DLT template ID (required for Indian routes)
         sender: process.env.SMS_SENDER_ID,
         mobiles: mobile,
-        var1: token,
+        // var1: token,
+        numeric: token,
       },
       {
         headers: {
