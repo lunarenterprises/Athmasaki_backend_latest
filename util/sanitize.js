@@ -115,6 +115,12 @@ async function sanitizeUserList(users, currentUserId) {
 
       // Get interest status between current user & this user
       const interestStatus = await model.getInterestStatus(currentUserId, userIdKey);
+      if (user.images) {
+        user.u_images = user.images.split(",");
+      } else {
+        user.u_images = [];
+      }
+
 
       // ✅ Sanitize user with rules
       return sanitizeUser(user, userVisibility, currentUserId, plandetails, interestStatus);

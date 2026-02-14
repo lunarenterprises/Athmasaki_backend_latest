@@ -2,21 +2,31 @@ var db = require('../../config/db');
 var util = require("util");
 const query = util.promisify(db.query).bind(db);
 
-// module.exports.ListAllUsers = async (condition) => {
-//     const Query = `select * from users where u_role='user' ${condition} order by u_id desc `
-//     return await query(Query)
-// }
+
+// module.exports.ListAllUsers = async (condition = "", params = []) => {
+//     const Query = `
+//         SELECT * 
+//         FROM users 
+//         WHERE u_role='user' 
+//         ${condition} 
+//         ORDER BY u_id DESC
+//     `;
+//     return await query(Query, params);  // ✅ pass params
+// };
 module.exports.ListAllUsers = async (condition = "", params = []) => {
-
     const Query = `
-        SELECT * 
-        FROM users 
-        WHERE u_role='user' 
-        ${condition} 
-        ORDER BY u_id DESC
+        SELECT 
+            u.*,
+            GROUP_CONCAT(ui.ui_file) AS images
+        FROM users u
+        LEFT JOIN user_images ui 
+            ON ui.ui_u_id = u.u_id
+        WHERE u.u_role = 'user'
+        ${condition}
+        GROUP BY u.u_id
+        ORDER BY u.u_id DESC
     `;
-
-    return await query(Query, params);  // ✅ pass params
+    return await query(Query, params);
 };
 
 

@@ -152,6 +152,11 @@ module.exports.ListAllUsers = async (req, res) => {
             }
             conditions.push("u_status = ?");
             params.push(status);
+            // ⭐ ADD THIS: If pending, only show profiles with completion = 4
+            if (status === 'pending') {
+                conditions.push("u_profile_completion = ?");
+                params.push(4);
+            }
         }
 
         // ✅ PROFILE ID
