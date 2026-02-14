@@ -165,13 +165,13 @@ module.exports.ListStates = async (req, res) => {
 
         const states = await model.ListStates(country_id);
 
-        if (states.length == 0) {
-            return res.send({
-                result: false,
-                message: "failed to fetch states list",
-                data:[]
-            });
-        }
+        // if (states.length == 0) {
+        //     return res.send({
+        //         result: false,
+        //         message: "failed to fetch states list",
+        //         data:[]
+        //     });
+        // }
 
         return res.send({
             result: true,
