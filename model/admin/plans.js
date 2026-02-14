@@ -13,8 +13,11 @@ module.exports.CheckPlanname = async (name) => {
     return await query(Query, [name.toLowerCase()])
 }
 
-module.exports.ListAllPlans = async () => {
-    let Query = `select * from plans where p_status='active'`
+module.exports.ListAllPlans = async (role) => {
+    let Query = `select * from plans `
+    if (role === "user") {
+        Query += `where p_status='active'`
+    }
     return await query(Query)
 }
 
@@ -69,3 +72,8 @@ module.exports.CheckUser = async (user_id) => {
 //     `;
 //     return await query(Query, [user_id]);
 // };
+
+module.exports.UpdatePlanStatus = async (plan_id, status) => {
+    let Query = `update plans set p_status=? where p_id=?`
+    return await query(Query, [status, plan_id])
+}

@@ -96,7 +96,7 @@ module.exports.ListAllPlans = async (req, res) => {
         const { user_id, role } = req.user || {};
         let { plan_type } = req.query || {};
 
-        const planData = await model.ListAllPlans(); // Get all plans
+        const planData = await model.ListAllPlans(role); // Get all plans
         const planUsage = await model.GetUserCountByPlan(); // Get usage per plan
 
         let activePlanId = null;
@@ -275,3 +275,39 @@ module.exports.DeletePlan = async (req, res) => {
     }
 }
 
+
+module.exports.UpdatePlanStatus = async (req, res) => {
+    try {
+        const { plan_id, status } = req.body
+        if (!plan_id || !status) {
+            return res.send({
+                result: false,
+                message: "Plan id and status are required"
+            })
+        }
+        const checkPlan = await model.CheckPlan(plan_id)
+        if (checkPlan.length === 0) {
+            return res.send({
+                result: false,
+                message: "Plan data not found"
+            })
+        }
+        const result = await model.UpdatePlanStatus(plan_id, status)
+        if (result.affectedRows > 0) {
+            return res.send({
+                result: true,
+                message: "Plan status updated successfully"
+            })
+        } else {
+            return res.send({
+                result: false,
+                message: "Failed to update plan status"
+            })
+        }
+    } catch (error) {
+        return res.send({
+            result: false,
+            message: error.message
+        })
+    }
+}
