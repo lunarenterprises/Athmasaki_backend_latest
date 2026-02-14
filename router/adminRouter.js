@@ -30,11 +30,12 @@ route.post('/edit/community', AdminverifyToken, Adminauthorize('admin'), EditCom
 route.delete('/delete/religion', AdminverifyToken, Adminauthorize('admin'), DeleteReligion)
 route.delete('/delete/community', AdminverifyToken, Adminauthorize('admin'), DeleteCommunity)
 
-var { CreateAddOnPlan, ListAddOnPlans, DeleteAddOnPlan, EditAddOnPlan } = require('../controller/admin/addOnplan')
+var { CreateAddOnPlan, ListAddOnPlans, DeleteAddOnPlan, EditAddOnPlan, UpdatePlanStatus } = require('../controller/admin/addOnplan')
 route.post('/add/add_on_plan', AdminverifyToken, Adminauthorize('admin'), checkPermission('create_add_on_plan'), CreateAddOnPlan)
 route.post('/list/add_on_plans', AdminverifyToken, ListAddOnPlans)
 route.post('/edit/add_on_plan', AdminverifyToken, Adminauthorize('admin'), EditAddOnPlan)
 route.post('/delete/add_on_plan', AdminverifyToken, Adminauthorize('admin'), DeleteAddOnPlan)
+route.post('/update/add_on_plan_status', AdminverifyToken, Adminauthorize('admin'), UpdatePlanStatus)
 
 var { PaymentHistory } = require('../controller/user/payment')
 route.get('/payment/history', AdminverifyToken, Adminauthorize('admin'), PaymentHistory)

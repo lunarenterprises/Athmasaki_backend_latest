@@ -14,7 +14,7 @@ module.exports.CheckPlanname = async (name) => {
 }
 
 module.exports.ListAllPlans = async () => {
-    let Query = `select * from plans`
+    let Query = `select * from plans where p_status='active'`
     return await query(Query)
 }
 

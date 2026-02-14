@@ -47,3 +47,8 @@ module.exports.CheckUser = async (user_id) => {
 //     `;
 //     return await query(Query, [user_id]);
 // };
+
+module.exports.UpdatePlanStatus=async(plan_id,status)=>{
+    let Query=`update plans set p_status=? where p_id=?`
+    return await query(Query,[status,plan_id])
+}
