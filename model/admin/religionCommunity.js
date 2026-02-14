@@ -28,9 +28,9 @@ module.exports.CheckCommunity = async (cm_id) => {
     return await query(Query, [cm_id])
 }
 
-module.exports.Checkcommunityname = async (community_name) => {
-    let Query = `select * from community where lower(cm_name)=?`
-    return await query(Query, [community_name.toLowerCase()])
+module.exports.Checkcommunityname = async (community_name, religion_id) => {
+    let Query = `select * from community where lower(cm_name)=? and cm_religion_id=?`
+    return await query(Query, [community_name.toLowerCase(), religion_id])
 }
 
 module.exports.Checkreligion = async (r_id) => {

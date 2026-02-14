@@ -56,7 +56,7 @@ module.exports.AddCommunity = async (req, res) => {
             })
         }
 
-        const checkcommunity = await model.Checkcommunityname(community_name)
+        const checkcommunity = await model.Checkcommunityname(community_name, r_id)
 
         if (checkcommunity.length > 0) {
             return res.send({
