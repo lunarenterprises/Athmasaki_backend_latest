@@ -340,9 +340,18 @@ module.exports.ViewProfile = async (req, res) => {
                     }
                 }
                 console.log("token in view profile in else : ", token)
+                const isRejected = usersData[0]?.u_status === "reject";
+
+                const message = isRejected
+                    ? `Your profile was not approved. Please contact support for help.
+
+https://athmasakhi.com/support.html`
+                    : "Data retrieved successfully";
+
                 return res.send({
                     result: true,
-                    message: "Data retrieved successfully",
+                    // message: "Data retrieved successfully",
+                    message,
                     data: updatedData,
                     token: token ? token : null,
                     profile_completion: usersData[0]?.u_profile_completion
