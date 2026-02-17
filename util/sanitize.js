@@ -1,7 +1,7 @@
 // utils/sanitizer.js
 const model = require('../model/user/fieldVsibility');
 
-async function sanitizeUser(user, visibilityMap = {}, currentUserId, plandetails, interestStatus = null) {
+async function sanitizeUser(user, visibilityMap = {}, currentUserId, plandetails, interestStatus = null, is_admin = false) {
 
   const {
     u_password,
@@ -73,7 +73,7 @@ async function sanitizeUser(user, visibilityMap = {}, currentUserId, plandetails
   //   }
   // }
 
-  if (!canViewContact) {
+  if (!canViewContact && !is_admin) {
     delete rest.u_first_name;
     delete rest.u_last_name;
     delete rest.u_email;
@@ -123,7 +123,7 @@ async function sanitizeUserList(users, currentUserId) {
 
 
       // ✅ Sanitize user with rules
-      return sanitizeUser(user, userVisibility, currentUserId, plandetails, interestStatus);
+      return sanitizeUser(user, userVisibility, currentUserId, plandetails, interestStatus, true);
 
     })
   );
