@@ -109,6 +109,7 @@ module.exports.ListAllUsers = async (req, res) => {
             const key = `%${search.trim().toLowerCase()}%`;
 
             const searchConditions = [
+                "LOWER(u_profile_id) LIKE ?",
                 "LOWER(u_country) LIKE ?",
                 "LOWER(u_state) LIKE ?",
                 "LOWER(u_district) LIKE ?",
