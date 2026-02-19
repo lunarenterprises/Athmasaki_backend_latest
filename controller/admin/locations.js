@@ -54,7 +54,7 @@ module.exports.AddState = async (req, res) => {
             })
         }
 
-        const checkstate = await model.CheckStatename(state_name)
+        const checkstate = await model.CheckStatename(state_name, country_id)
         if (checkstate.length > 0) {
             return res.send({
                 result: true,
@@ -96,7 +96,7 @@ module.exports.AddDistrict = async (req, res) => {
             })
         }
 
-        const checkdistrict = await model.CheckDistrictname(district_name)
+        const checkdistrict = await model.CheckDistrictname(district_name, country_id, state_id)
         if (checkdistrict.length > 0) {
             return res.send({
                 result: true,
@@ -134,7 +134,7 @@ module.exports.ListCountry = async (req, res) => {
             return res.send({
                 result: false,
                 message: "failed to fetch Country list",
-                data:[]
+                data: []
             });
         }
 
@@ -204,7 +204,7 @@ module.exports.ListDistricts = async (req, res) => {
                 return res.send({
                     result: false,
                     message: "failed to fetch all district list",
-                    data:[]
+                    data: []
                 });
             }
 

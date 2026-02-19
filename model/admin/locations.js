@@ -8,14 +8,14 @@ module.exports.CheckCountryname = async (country_name) => {
     return await query(Query, [country_name])
 }
 
-module.exports.CheckStatename = async (state_name) => {
-    let Query = `SELECT * FROM states WHERE LOWER(state_name) = LOWER(?)`
-    return await query(Query, [state_name])
+module.exports.CheckStatename = async (state_name, country) => {
+    let Query = `SELECT * FROM states WHERE LOWER(state_name) = LOWER(?) and LOWER(state_country_id)=LOWER(?)`
+    return await query(Query, [state_name, country])
 }
 
-module.exports.CheckDistrictname = async (district_name) => {
-    let Query = `SELECT * FROM districts WHERE LOWER(district_name) = LOWER(?)`
-    return await query(Query, [district_name])
+module.exports.CheckDistrictname = async (district_name, country_id, state_id) => {
+    let Query = `SELECT * FROM districts WHERE LOWER(district_name) = LOWER(?) and LOWER(district_country_id)=LOWER(?) and LOWER(district_state_id)=LOWER(?)`
+    return await query(Query, [district_name, country_id, state_id])
 }
 
 module.exports.AddCountry = async (country_name) => {

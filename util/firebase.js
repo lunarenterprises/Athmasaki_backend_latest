@@ -142,12 +142,12 @@ async function FirebaseSendNotification(
 
         const payload = {
             token: user.ft_fcm_token,
-            notification: {
-                title: notificationBody.title,
-                body: notificationBody.body,
-                // ✅ add this
-                // image: "https://cdn-icons-png.flaticon.com/256/1456/1456503.png"
-            },
+            // notification: {
+            //     title: notificationBody.title,
+            //     body: notificationBody.body,
+            //     // ✅ add this
+            //     // image: "https://cdn-icons-png.flaticon.com/256/1456/1456503.png"
+            // },
             data: safeData,
             android: {
                 priority: "high",
