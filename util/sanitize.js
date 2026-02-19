@@ -41,14 +41,14 @@ async function sanitizeUser(user, visibilityMap = {}, currentUserId, plandetails
       if (visibilityMap[key] === 0) {
         delete rest[key];
       } else if (typeof rest[key] === "string") {
-        rest[key] = rest[key].trim().toLowerCase();
+        rest[key] = rest[key].trim();
       }
     });
   } else {
     // Just normalize strings
     Object.keys(rest).forEach((key) => {
       if (typeof rest[key] === "string") {
-        rest[key] = rest[key].trim().toLowerCase();
+        rest[key] = rest[key].trim();
       }
     });
   }
@@ -72,23 +72,21 @@ async function sanitizeUser(user, visibilityMap = {}, currentUserId, plandetails
   //     canViewContact = true;
   //   }
   // }
+  const shouldHideContact = !(Boolean(canViewContact) || Boolean(is_admin));
+  console.log("shoule hide contact info : ", shouldHideContact, "canViewContact : ", canViewContact, "is_admin : ", is_admin)
 
-  if (!canViewContact && !is_admin) {
+  if (shouldHideContact) {
     delete rest.u_first_name;
     delete rest.u_last_name;
     delete rest.u_email;
     delete rest.u_mobile;
-    delete rest.u_country;
-    delete rest.u_state;
-    delete rest.u_district;
-    delete rest.u_location;
     delete rest.u_company_name;
-
   }
+  console.log("rest after contact info check : ", rest)
   return rest;
 }
 
-async function sanitizeUserList(users, currentUserId) {
+async function sanitizeUserList(users, currentUserId, is_admin = false) {
   const visibilitySettings = await model.getVisibilitySettings();
 
   const results = await Promise.all(
@@ -115,6 +113,7 @@ async function sanitizeUserList(users, currentUserId) {
 
       // Get interest status between current user & this user
       const interestStatus = await model.getInterestStatus(currentUserId, userIdKey);
+      console.log("Interest Status for user", userIdKey, "is", interestStatus);
       if (user.images) {
         user.u_images = user.images.split(",");
       } else {
@@ -123,7 +122,7 @@ async function sanitizeUserList(users, currentUserId) {
 
 
       // ✅ Sanitize user with rules
-      return sanitizeUser(user, userVisibility, currentUserId, plandetails, interestStatus, true);
+      return sanitizeUser(user, userVisibility, currentUserId, plandetails, interestStatus, is_admin);
 
     })
   );

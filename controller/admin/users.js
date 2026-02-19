@@ -178,7 +178,7 @@ module.exports.ListAllUsers = async (req, res) => {
 
         const usersData = await model.ListAllUsers(finalCondition, params);
 
-        let sanitizedUsers = await sanitizeUserList(usersData, admin_id) || [];
+        let sanitizedUsers = await sanitizeUserList(usersData, admin_id, true) || [];
 
         return res.send({
             result: true,

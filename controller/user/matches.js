@@ -193,7 +193,7 @@ module.exports.ListAcceptedMatches = async (req, res) => {
 
     let interestData = await model.ListInterests(user_id)
 
-    let updatedUser = await sanitizeUserList(interestData, user_id);
+    let updatedUser = await sanitizeUserList(interestData, user_id,true);
 
     if (updatedUser.length > 0) {
       let ListInterests = await Promise.all(
