@@ -5,11 +5,8 @@ const query = util.promisify(db.query).bind(db);
 // ✅ Active users (logged in within the last 30 days)
 module.exports.ActiveUsers = async () => {
     const result = await query(`
-        SELECT COUNT(DISTINCT u.u_id) AS count
-        FROM users u
-        INNER JOIN login_data ld ON ld.ld_u_id = u.u_id
-        WHERE ld.ld_login_time >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
-        AND u.u_status = 'active'
+        SELECT COUNT(DISTINCT u_id) AS count
+        FROM users WHERE u_status = 'active'
     `);
 
     return result[0].count;
@@ -19,12 +16,7 @@ module.exports.ActiveUsers = async () => {
 module.exports.InActiveUsers = async () => {
     const result = await query(`
         SELECT COUNT(*) AS count
-        FROM users u
-        WHERE u.u_status = 'inactive'
-        AND u.u_id NOT IN (
-            SELECT ld.ld_u_id
-            FROM login_data ld
-            WHERE ld.ld_login_time >= DATE_SUB(CURDATE(), INTERVAL 30 DAY) ) `);
+        FROM users WHERE u_status = 'inactive' `);
 
     return result[0].count;
 };
@@ -52,7 +44,7 @@ module.exports.PendingApprovalsList = async () => {
     const result = await query(`
         SELECT *
         FROM users
-        WHERE u_status = 'pending'`);
+        WHERE u_status ='pending'`);
     return result;
 };
 
